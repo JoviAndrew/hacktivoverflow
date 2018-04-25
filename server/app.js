@@ -14,7 +14,7 @@ mongoose.connect('mongodb://localhost/hacktivoverflow')
 
 const indexRouter = require('./routers/index_router.js')
 const homeRouter = require('./routers/home_router.js')
-const notifRouter = require('./routers/notif_router')
+const notifRouter = require('./routers/notif_router.js')
 
 app.use('/index', indexRouter)
 app.use('/home', homeRouter)

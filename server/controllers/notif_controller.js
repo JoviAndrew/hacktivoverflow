@@ -1,4 +1,5 @@
 const user = require('../models/user');
+const nodemailer = require('nodemailer');
 
 module.exports = {
   
@@ -10,17 +11,15 @@ module.exports = {
         pass: process.env.EMAIL_PASS
       }
     });
-
+  
     user.find({})
     .then(function(userData){
-      userData.forEach(data => {
-        var mailOptions = {
-          from: process.env.EMAIL_ADD,
-          to: data.username,
-          subject: 'Comback Notification',
-          text: 'Check back with us to find out what has been happening!'
-        }
-      })
+      var mailOptions = {
+        from: process.env.EMAIL_ADD,
+        to: userData.username,
+        subject: 'Comback Notification',
+        text: 'Check back with us to find out what has been happening!'
+      }
     })
     .catch(function(err){
       console.log(err)
