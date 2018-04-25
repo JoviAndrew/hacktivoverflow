@@ -1,16 +1,30 @@
 const router = require('express').Router();
 const home = require('../controllers/home_controller');
 
-router.get('/show', home.getAllPosts);
+router.get('/show-questions', home.getAllQuestions);
 
-router.post('/postA', home.addQuestion);
+router.get('/show-questions/:id', home.getOneQuestion)
 
-router.post('/postQ', home.addAnswer);
+router.get('/show-answers/:id', home.getAllAnswers)
 
-router.put('/update/:id', home.updatePost);
+router.post('/post-question', home.addQuestion);
 
-router.delete('/deleteQ/:id', home.deleteQuestion);
+router.post('/post-answer/:id', home.addAnswer);
 
-router.delete('/deleteA/:id', home.deleteAnswer)
+router.put('/update/:id', home.updateQuestion);
+
+router.delete('/delete-question/:id', home.deleteQuestion);
+
+router.delete('/delete-answer/:id', home.deleteAnswer);
+
+//Voting Question
+router.put('/voteup-question/:id', home.upVoteQuestion);
+
+router.put('/votedown-question/:id', home.downVoteQuestion);
+
+//Voting Answer
+router.put('/voteup-answer/:id', home.upVoteAnswer);
+
+router.put('/votedown-answer/:id', home.downVoteAnswer);
 
 module.exports = router;

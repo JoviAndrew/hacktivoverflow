@@ -35,10 +35,12 @@ module.exports = {
     doRegister(req, res){
 
         var regexUsername = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        let password = req.body.password;
+        let password = req.body.password
         let letter = /[a-zA-Z]/; 
         let number = /[0-9]/;
         let goodPassword = letter.test(password) && number.test(password);
+        let firstname = req.body.firstname
+        let lastname = req.body.lastname
         if(password.length < 6){
             res.json({
                 message: 'Password too short!'
@@ -67,8 +69,11 @@ module.exports = {
                         .create({
                             username: req.body.username,
                             password: hash,
+                            firstname: firstname,
+                            lastname: lastname
                         })
                         .then(function(result){
+                            let token = jwt.sign({id: userData._id, username: userData.username}, process.env.SECRET)
                             res.status(200).json({
                                 message: "success register a new user",
                                 result: result,
