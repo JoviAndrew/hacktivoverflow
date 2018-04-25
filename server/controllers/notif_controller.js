@@ -14,12 +14,14 @@ module.exports = {
   
     user.find({})
     .then(function(userData){
-      var mailOptions = {
-        from: process.env.EMAIL_ADD,
-        to: userData.username,
-        subject: 'Comback Notification',
-        text: 'Check back with us to find out what has been happening!'
-      }
+      userData.forEach(user => {
+        var mailOptions = {
+          from: process.env.EMAIL_ADD,
+          to: user.username,
+          subject: 'Comback Notification',
+          text: 'Check back with us to find out what has been happening!'
+        }
+      })
     })
     .catch(function(err){
       console.log(err)
