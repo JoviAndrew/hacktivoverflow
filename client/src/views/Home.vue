@@ -114,7 +114,7 @@ export default {
     doRegister () {
       let self = this
       if(this.wrongFormatUsername == false && this.wrongFormatPass == false){
-        axios.post('http://localhost:3000/index/register',
+        axios.post('http://35.197.131.176/index/register',
           {
             username: self.username,
             password: self.password,
