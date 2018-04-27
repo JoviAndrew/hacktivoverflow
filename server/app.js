@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan('dev'));
 
-mongoose.connect('mongodb://localhost/hacktivoverflow')
+mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@ds259119.mlab.com:59119/hacktiv-overflow`)
 
 const indexRouter = require('./routers/index_router.js')
 const homeRouter = require('./routers/home_router.js')
@@ -21,5 +21,5 @@ app.use('/home', homeRouter)
 app.use('/notif', notifRouter)
 
 app.listen(3000, () => {
-    console.log('listening on port 3000')
+    console.log(`listening on port 3000`)
 })

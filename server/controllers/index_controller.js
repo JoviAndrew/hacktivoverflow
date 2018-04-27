@@ -1,6 +1,6 @@
 const users = require('../models/user');
 const jwt = require('jsonwebtoken');
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 const saltRounds = 10;
 
 module.exports = {
@@ -25,7 +25,9 @@ module.exports = {
                         res.json({
                             message: 'Success login',
                             token: token,
-                            username: userData.username
+                            username: userData.username,
+                            firstname: userData.firstname,
+                            lastname: userData.lastname
                         })
                     }
                 })
@@ -33,7 +35,6 @@ module.exports = {
         })
     },
     doRegister(req, res){
-
         var regexUsername = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         let password = req.body.password
         let letter = /[a-zA-Z]/; 
@@ -58,9 +59,9 @@ module.exports = {
                 username: req.body.username
             })
             .then(function(userData){
-                if(userData != null){
-                    res.status(400).json({
-                        message: "username has been taken!",
+                if(userData !== null){
+                    res.send({
+                      message: "username has been taken!",
                     })
                 }else{
                     let salt = bcrypt.genSaltSync(saltRounds)
@@ -73,22 +74,24 @@ module.exports = {
                             lastname: lastname
                         })
                         .then(function(result){
-                            let token = jwt.sign({id: userData._id, username: userData.username}, process.env.SECRET)
+                            // let token = jwt.sign({id: userData._id, username: userData.username}, process.env.SECRET)
                             res.status(200).json({
-                                message: "success register a new user",
-                                result: result,
-                                token: token,
-                                username: userData.username
+                              message: "success register a new user",
+                              result: result,
+                              // token: token,
+                              // username: userData.username,
+                              // firstname: firstname,
+                              // lastname: lastname
                             })
-                            
                         })
+                        .catch(function(err){
+                          res.send({
+                              message: err
+                          })
+                      }) 
                 }
             })
-            .catch(function(err){
-                res.status(500).json({
-                    message: err
-                })
-            }) 
+            
             
         }  
     }

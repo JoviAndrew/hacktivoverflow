@@ -113,27 +113,36 @@ export default {
   methods: {
     doRegister () {
       let self = this
-      axios.post('http://localhost:3000/index/register',
-        {
-          username: self.username,
-          password: self.password,
-          firstname: self.firstname,
-          lastname: self.lastname
-        })
-        .then(function (response) {
-          if (response.data.message !== 'success register a new user') {
-            let message = response.data.message
-            self.errorMessage = message
-            self.hide = true
-          } else {
-            swal({title: 'Success', text: response.data.message, icon: 'success', buttons: 'OK'})
-            localStorage.setItem('token', response.data.token)
-            localStorage.setItem('username', response.data.username)
-          }
-        })
-        .catch(function (err) {
-          console.log(err)
-        })
+      if(this.wrongFormatUsername == false && this.wrongFormatPass == false){
+        axios.post('http://localhost:3000/index/register',
+          {
+            username: self.username,
+            password: self.password,
+            firstname: self.firstname,
+            lastname: self.lastname
+          })
+          .then(function (response) {
+            console.log(response)
+            if (response.data.message !== 'success register a new user') {
+              let message = response.data.message
+              self.errorMessage = message
+              self.hide = true
+            } else {
+              swal({title: 'Success', text: response.data.message, icon: 'success', buttons: 'OK'})
+              self.resetRegister()
+            }
+          })
+          .catch(function (err) {
+            console.log(err)
+          })
+      }
+    },
+    resetRegister () {
+      this.firstname = '',
+      this.lastname = '',
+      this.username = '',
+      this.password = '',
+      this.confirm = ''
     }
   }
 }

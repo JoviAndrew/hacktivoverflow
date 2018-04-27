@@ -32,7 +32,7 @@ export default new Vuex.Store({
   },
   actions: {
     getAllQuestions({commit}){
-      axios.get('http://localhost:3000/home/show-questions')
+      axios.get('http://35.197.131.176/home/show-questions')
       .then(function(response){
         commit('renewQuestions', response.data.data)
       })
@@ -41,7 +41,7 @@ export default new Vuex.Store({
       })
     },
     getOneQuestion({commit}, id) {
-      axios.get(`http://localhost:3000/home/show-questions/${id}`)
+      axios.get(`http://35.197.131.176/home/show-questions/${id}`)
       .then(function(questionData){
         commit('renewQuestion', questionData.data.data)
       })
@@ -51,7 +51,7 @@ export default new Vuex.Store({
       })
     },
     addNewAnswer({dispatch}, item) {
-      axios.post(`http://localhost:3000/home/post-answer/${item.id}`, {postText: item.post}, {headers: {token: item.token}})
+      axios.post(`http://35.197.131.176/home/post-answer/${item.id}`, {postText: item.post}, {headers: {token: item.token}})
       .then(function(response){
         swal('Success', response.data.message)
         dispatch('getOneQuestion', item.id)
@@ -61,7 +61,7 @@ export default new Vuex.Store({
       })
     },
     votePositive({dispatch}, item) {
-      axios.put(`http://localhost:3000/home/voteup-question/${item.id}`, {}, {headers: {token: item.token}})
+      axios.put(`http://35.197.131.176/home/voteup-question/${item.id}`, {}, {headers: {token: item.token}})
       .then(function(response){
         dispatch('getOneQuestion', item.id)
       })
@@ -70,7 +70,7 @@ export default new Vuex.Store({
       })
     },
     voteNegative({dispatch}, item) {
-      axios.put(`http://localhost:3000/home/votedown-question/${item.id}`, {}, {headers: {token: item.token}})
+      axios.put(`http://35.197.131.176/home/votedown-question/${item.id}`, {}, {headers: {token: item.token}})
       .then(function(response){
         dispatch('getOneQuestion', item.id)
       })
@@ -79,7 +79,7 @@ export default new Vuex.Store({
       })
     },
     votePositiveAnswer({dispatch}, item) {
-      axios.put(`http://localhost:3000/home/voteup-answer/${item.answerId}`, {}, {headers: {token: item.token}})
+      axios.put(`http://35.197.131.176/home/voteup-answer/${item.answerId}`, {}, {headers: {token: item.token}})
       .then(function(response){
         dispatch('getOneQuestion', item.questionId)
       })
@@ -88,7 +88,7 @@ export default new Vuex.Store({
       })
     },
     voteNegativeAnswer({dispatch}, item) {
-      axios.put(`http://localhost:3000/home/votedown-answer/${item.answerId}`, {}, {headers: {token: item.token}})
+      axios.put(`http://35.197.131.176/home/votedown-answer/${item.answerId}`, {}, {headers: {token: item.token}})
       .then(function(response){
         dispatch('getOneQuestion', item.questionId)
       })
@@ -97,7 +97,7 @@ export default new Vuex.Store({
       })
     },
     addQuestion({dispatch}, item) {
-      axios.post(`http://localhost:3000/home/post-question`, {header: item.header, postText: item.postText}, {headers: {token: item.token}})
+      axios.post(`http://35.197.131.176/home/post-question`, {header: item.header, postText: item.postText}, {headers: {token: item.token}})
       .then(function(response){
         swal('Success', response.data.message)
         dispatch('getAllQuestions')
@@ -107,7 +107,7 @@ export default new Vuex.Store({
       })
     },
     updateOneQuestion({dispatch}, item){
-      axios.put(`http://localhost:3000/home/update/${item.questionId}`, {header: item.header, postText: item.postText}, {headers: {token: item.token}})
+      axios.put(`http://35.197.131.176/home/update/${item.questionId}`, {header: item.header, postText: item.postText}, {headers: {token: item.token}})
       .then(function(response){
         swal('Success', response.data.message)
         dispatch('getAllQuestions')
@@ -118,7 +118,7 @@ export default new Vuex.Store({
       })
     },
     deleteQuestion({dispatch}, item){
-      axios.delete(`http://localhost:3000/home/delete-question/${item.questionId}`,{headers: {token: item.token}})
+      axios.delete(`http://35.197.131.176/home/delete-question/${item.questionId}`,{headers: {token: item.token}})
       .then(function(response){
         swal('Success', response.data.message)
         dispatch('getAllQuestions')
@@ -128,7 +128,7 @@ export default new Vuex.Store({
       })
     },
     deleteAnswer({dispatch}, item){
-      axios.delete(`http://localhost:3000/home/delete-answer/${item.answerId}`, {headers: {token: item.token, id: item.questionId}})
+      axios.delete(`http://35.197.131.176/home/delete-answer/${item.answerId}`, {headers: {token: item.token, id: item.questionId}})
       .then(function(response){
         swal('Success', response.data.message)
         dispatch('getOneQuestion', item.questionId)

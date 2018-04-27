@@ -52,7 +52,6 @@ export default {
           this.$store.commit('changeStatusTrue')
         })
         .catch(function (err) {
-          alert('Username or password is incorrect')
           console.log(err)
         })
     },
