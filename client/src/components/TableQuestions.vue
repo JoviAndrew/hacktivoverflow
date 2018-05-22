@@ -25,19 +25,18 @@
                   <router-link class="headerQuestion btn btn-link" :to="{ name: 'question', params: {id: question._id}}">{{question.header}}</router-link>
                 </div>
                 <div class="col-12">
-                  <span class="details">Submited at <strong>{{question.createdAt}}</strong> by <strong>{{question.username}}</strong></span>
+                  <span class="details">Submited at <strong>{{question.createdAt.getFullYear()}}-{{question.createdAt.getMonth()}}-{{question.createdAt.getDate()}} {{question.createdAt.getHours()}}:{{question.createdAt.getMinutes()}}:{{question.createdAt.getSeconds()}}</strong> by <strong>{{question.username}}</strong></span>
                 </div>
               </td>
             </tr>
           </table>
         </div>
         <div class="col-sm-12 col-lg-4">
-          <div v-if="hide == false" class="mt-4 col-12">
+          <div v-if="isLogin" class="mt-4 col-12">
             <button class="btn btn-outline-primary" data-toggle="modal" data-target="#questionModal" @click="setForCreate">Ask Question</button>
           </div>
         </div>
       </div>
-
       <!-- Modal Create -->
     <div class="modal fade" id="questionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -76,9 +75,7 @@ export default {
       hide: false
     }
   },
-  computed: mapState([
-    'questions'
-  ]),
+  computed: mapState(['questions', 'isLogin']),
   created () {
     this.$store.dispatch('getAllQuestions')
     let token = localStorage.getItem('token')
@@ -91,20 +88,14 @@ export default {
   },
   methods: {
     createNewQuestion () {
-      let header = this.header
-      let postText = this.postText
-      let token = localStorage.getItem('token')
-
       let item = {
-        header: header,
-        postText: postText,
-        token: token
+        header: this.header,
+        postText: this.postText,
+        token: localStorage.getItem('token'),
+        username: localStorage.getItem('username')
       }
-
-      this.header = ''
-      this.postText = ''
+      this.setForCreate()
       this.$store.dispatch('addQuestion', item)
-      this.$router.push('/index')
     },
     setForCreate () {
       this.header = ''

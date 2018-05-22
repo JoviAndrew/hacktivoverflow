@@ -2,7 +2,6 @@ const user = require('../models/user');
 const nodemailer = require('nodemailer');
 
 module.exports = {
-  
   sendNotif(req, res) {
     var transporter = nodemailer.createTransport({
       service: 'gmail',

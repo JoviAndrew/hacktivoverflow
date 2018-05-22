@@ -3,7 +3,8 @@
     <div class="row">
       <div class="col-12">
         <nav class="navbar justify-content-between navbar-light bg-light">
-          <strong><a class="navbar-brand navbar-nav mr-auto" href="">Hacktiv-Overflow</a></strong>
+          <strong><a class="navbar-brand navbar-nav mr-auto">Hacktiv-Overflow</a></strong>
+            <button class="btn btn-outline-primary" @click="goToHome">Home</button>
             <button v-if="isLogin" class="btn btn-outline-danger my-2 my-sm-0" @click="doLogout">Log out</button>
             <button v-else class="btn btn-outline-success my-2 my-sm-0" @click="gotoLogin">Log in</button>
         </nav>
@@ -23,19 +24,35 @@ export default {
       showLogout: false
     }
   },
-  computed: mapState([
-    'isLogin'
-  ]),
+  computed: {
+    ...mapState(['isLogin'])
+  },
+  created () {
+    let token = localStorage.getItem('token')
+    if (token) {
+      this.$store.commit('changeStatusTrue')
+    } else {
+      this.$router.push('/')
+    }
+  },
   methods: {
+    goToHome () {
+      this.$router.push('/')
+      this.$store.dispatch('getAllQuestions')
+    },
     gotoLogin () {
       this.$router.push('/login')
     },
     doLogout () {
-      localStorage.clear()
+      localStorage.removeItem('token')
+      localStorage.removeItem('username')
+      localStorage.removeItem('firstname')
+      localStorage.removeItem('lastname')
       this.showLogin = true
       this.showLogout = false
       this.$router.push('/')
       this.$store.commit('changeStatusFalse')
+      this.$store.dispatch('getAllQuestions')
     }
   }
 }

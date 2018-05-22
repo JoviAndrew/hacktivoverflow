@@ -7,4 +7,7 @@ router.post('/login', index.doLogin)
 //Register
 router.post('/register', index.doRegister)
 
+//Login
+router.post('/login-fb', index.loginFb)
+
 module.exports = router

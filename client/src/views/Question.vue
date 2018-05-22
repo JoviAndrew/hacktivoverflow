@@ -1,26 +1,26 @@
 <template>
   <div class="question">
     <div class="row mt-2">
-      <div class="header col-xs-12 col-sm-9 col-lg-9">
+      <div class="header col-xs-12 col-sm-12 col-lg-9">
         <h3>{{detailQuestion.header}}</h3>
       </div>
-      <div class="col-xs-12 col-sm-3 col-lg-3 buttonAsk">
+      <div class="col-xs-12 col-sm-12 col-lg-3 buttonAsk">
         <div class="col-12">
           <button class="btn btn-outline-primary" data-toggle="modal" data-target="#questionModal" @click="setForCreate">Ask Question</button>
         </div>
-        <div v-if="postCreator" class="mt-3 col-12">
+        <div v-if="username === detailQuestion.username" class="mt-3 col-12">
           <button class="btn btn-link" data-toggle="modal" data-target="#editModal" @click="setForEdit(detailQuestion)">Edit</button>
           <button class="btn btn-link" @click="deleteQuestion">Delete</button>
         </div>
       </div>
-      <div class="col-xs-12 col-sm-9 col-lg-9">
+      <div class="col-xs-12 col-sm-12 col-lg-9">
         <p>{{detailQuestion.post_text}}</p>
         <div>
           <p style="font-size: 12px">Posted by:<strong> {{detailQuestion.user.firstname}} {{detailQuestion.user.lastname}}</strong></p>
-          <p style="font-size: 12px">At: {{detailQuestion.createdAt}}</p>
+          <p style="font-size: 12px">At: <strong>{{detailQuestion.createdAt.getFullYear()}}-{{detailQuestion.createdAt.getMonth()}}-{{detailQuestion.createdAt.getDate()}} {{detailQuestion.createdAt.getHours()}}:{{detailQuestion.createdAt.getMinutes()}}:{{detailQuestion.createdAt.getSeconds()}}</strong></p>
         </div>
       </div>
-      <div class="side col-xs-12 col-sm-3 col-lg-3">
+      <div class="side col-xs-12 col-sm-12 col-lg-3">
         <p>Is this question useful?</p>
         <button class="btn btn-success" @click="voteUp">Yes</button>
         <button class="btn btn-danger" @click="voteDown">No</button>
@@ -29,15 +29,15 @@
           <p>{{detailQuestion.up.length - detailQuestion.down.length}}</p>
         </div>
       </div>
-      <div class="columnAnswer col-xs-12 col-sm-9 col-lg-9">
+      <div class="columnAnswer col-xs-12 col-sm-12 col-lg-9">
         <h4 class="uppercase" style="text-decoration: underline">Answers</h4>
         <div class="answer row" v-for="(answer, index) in detailQuestion.answers" :key="index">
           <div class="mt-3 col-xs-12 col-sm-9 col-lg-9">
             <p>{{answer.post_text}}</p>
             <div class="detail pt-2">
               <p style="font-size: 12px">Posted by: <strong>{{answer.user.firstname}} {{answer.user.lastname}}</strong></p>
-              <p style="font-size: 12px">At: {{answer.createdAt}}</p>
-              <button style="font-size: 12px" class="btn btn-link" @click="deleteAnswer(answer._id)">Remove</button>
+              <p style="font-size: 12px">At: <strong>{{answer.createdAt.getFullYear()}}-{{answer.createdAt.getMonth()}}-{{answer.createdAt.getDate()}} {{answer.createdAt.getHours()}}:{{answer.createdAt.getMinutes()}}:{{answer.createdAt.getSeconds()}}</strong></p>
+              <button v-if="username === answer.username" style="font-size: 12px" class="btn btn-link" @click="deleteAnswer(answer._id)">Remove</button>
             </div>
           </div>
           <div class="mt-3 col-xs-12 col-sm-3 col-lg-3">
@@ -50,13 +50,9 @@
             </div>
           </div>
         </div>
-        <div class="postAnswer col-12 pt-3">
-          <div>
-            <textarea cols="70" rows="8" v-model="postTextAnswer"></textarea>
-          </div>
-          <div>
-            <button class="btn btn-primary mt-9" @click="addAnswer">Post your answer</button>
-          </div>
+        <div class="postAnswer col-xs-12 col-lg-9 mt-3">
+        <textarea cols="70" rows="8" v-model="postTextAnswer"></textarea>
+        <button class="btn btn-primary mt-3" @click="addAnswer">Post your answer</button>
         </div>
       </div>
     </div>
@@ -119,24 +115,24 @@ export default {
   name: 'question',
   data () {
     return {
+      username: '',
       postTextAnswer: '',
       postCreator: true,
       header: '',
       postText: ''
     }
   },
-  computed: mapState([
-    'detailQuestion'
-  ]),
-  props: ['id'],
+  computed: {
+    ...mapState(['detailQuestion', 'isLogin'])
+  },
+  beforeCreate () {
+    this.$store.dispatch('getOneQuestion', this.$route.params.id)
+  },
   created () {
-    // let username = localStorage.getItem('username')
-    // if(username == this.detailQuestion.user.username){
-    //   this.postCreator = true
-    // }else{
-    //   this.postCreator = false
-    // }
-    this.$store.dispatch('getOneQuestion', this.id)
+    let tempUser = localStorage.getItem('username')
+    if(tempUser !== null) {
+      this.username = tempUser
+    }
   },
   methods: {
     addAnswer () {
@@ -145,9 +141,8 @@ export default {
       let items = {
         token: token,
         post: post,
-        id: this.id
+        id: this.$route.params.id
       }
-
       this.$store.dispatch('addNewAnswer', items)
       this.postTextAnswer = ''
     },
@@ -155,7 +150,7 @@ export default {
       let token = localStorage.getItem('token')
       let items = {
         token: token,
-        id: this.id
+        id: this.$route.params.id
       }
       this.$store.dispatch('votePositive', items)
     },
@@ -163,7 +158,7 @@ export default {
       let token = localStorage.getItem('token')
       let items = {
         token: token,
-        id: this.id
+        id: this.$route.params.id
       }
       this.$store.dispatch('voteNegative', items)
     },
@@ -172,7 +167,7 @@ export default {
       let items = {
         token: token,
         answerId: id,
-        questionId: this.id
+        questionId: this.$route.params.id
       }
 
       this.$store.dispatch('votePositiveAnswer', items)
@@ -182,7 +177,7 @@ export default {
       let items = {
         token: token,
         answerId: id,
-        questionId: this.id
+        questionId: this.$route.params.id
       }
       this.$store.dispatch('voteNegativeAnswer', items)
     },
@@ -219,7 +214,7 @@ export default {
         header: header,
         postText: postText,
         token: token,
-        questionId: this.id
+        questionId: this.$route.params.id
       }
 
       this.header = ''
@@ -227,28 +222,49 @@ export default {
       this.$store.dispatch('updateOneQuestion', item)
     },
     deleteQuestion () {
-      let token = localStorage.getItem('token')
-      let item = {
-        questionId: this.id,
-        token: token
-      }
-      this.$store.dispatch('deleteQuestion', item)
-      this.$router.push('/index')
+      swal({
+        title: 'Are you sure?',
+        text: 'Once deleted, you will not be able to recover this data!',
+        icon: 'warning',
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+          let token = localStorage.getItem('token')
+          let item = {
+            questionId: this.$route.params.id,
+            token: token
+          }
+          this.$store.dispatch('deleteQuestion', item)
+        }
+      })
     },
     deleteAnswer (answerId) {
-      let token = localStorage.getItem('token')
-      let item = {
-        answerId: answerId,
-        questionId: this.id,
-        token: token
-      }
-      this.$store.dispatch('deleteAnswer', item)
+      swal({
+        title: 'Are you sure?',
+        text: 'Once deleted, you will not be able to recover this data!',
+        icon: 'warning',
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+          let token = localStorage.getItem('token')
+          let item = {
+            answerId: answerId,
+            questionId: this.$route.params.id,
+            token: token
+          }
+          this.$store.dispatch('deleteAnswer', item)
+        }
+      })
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
 .modal-body{
   display: flex;
   flex-direction: column
@@ -264,21 +280,22 @@ textarea{
 .columnAnswer{
   padding-top: 10%
 }
-
 .votes{
   padding-top: 10%;
   font-size: 20px
 }
-
 .header{
   margin-top: 3%
 }
-
 .buttonAsk{
   margin-top: 3%;
   border-left: 1px solid lightblue
 }
-
+.postAnswer {
+  display: flex;
+  flex-direction: column;
+  margin-left: 12%
+}
 .answer{
   margin-top: 3%;
   border: 2px solid lightblue;
