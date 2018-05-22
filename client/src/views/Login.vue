@@ -24,6 +24,7 @@
 
 <script>
 // @ is an alias to /src
+/* eslint-disable */
 
 window.fbAsyncInit = function() {
   FB.init({
@@ -35,11 +36,11 @@ window.fbAsyncInit = function() {
   FB.AppEvents.logPageView()  
 };
 
-(function(d, s, id){
+(function (d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0]
-  if (d.getElementById(id)) {return;}
+  if (d.getElementById(id)) { return }
   js = d.createElement(s); js.id = id
-  js.src = "https://connect.facebook.net/en_US/sdk.js"
+  js.src = 'https://connect.facebook.net/en_US/sdk.js'
   fjs.parentNode.insertBefore(js, fjs)
 }(document, 'script', 'facebook-jssdk'))
 

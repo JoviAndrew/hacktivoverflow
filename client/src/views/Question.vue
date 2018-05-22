@@ -108,8 +108,8 @@
 </template>
 
 <script>
-
 import { mapState } from 'vuex'
+import swal from 'sweetalert'
 
 export default {
   name: 'question',
@@ -130,7 +130,7 @@ export default {
   },
   created () {
     let tempUser = localStorage.getItem('username')
-    if(tempUser !== null) {
+    if (tempUser !== null) {
       this.username = tempUser
     }
   },
@@ -227,18 +227,18 @@ export default {
         text: 'Once deleted, you will not be able to recover this data!',
         icon: 'warning',
         buttons: true,
-        dangerMode: true,
+        dangerMode: true
       })
-      .then((willDelete) => {
-        if (willDelete) {
-          let token = localStorage.getItem('token')
-          let item = {
-            questionId: this.$route.params.id,
-            token: token
+        .then((willDelete) => {
+          if (willDelete) {
+            let token = localStorage.getItem('token')
+            let item = {
+              questionId: this.$route.params.id,
+              token: token
+            }
+            this.$store.dispatch('deleteQuestion', item)
           }
-          this.$store.dispatch('deleteQuestion', item)
-        }
-      })
+        })
     },
     deleteAnswer (answerId) {
       swal({
@@ -246,19 +246,19 @@ export default {
         text: 'Once deleted, you will not be able to recover this data!',
         icon: 'warning',
         buttons: true,
-        dangerMode: true,
+        dangerMode: true
       })
-      .then((willDelete) => {
-        if (willDelete) {
-          let token = localStorage.getItem('token')
-          let item = {
-            answerId: answerId,
-            questionId: this.$route.params.id,
-            token: token
+        .then((willDelete) => {
+          if (willDelete) {
+            let token = localStorage.getItem('token')
+            let item = {
+              answerId: answerId,
+              questionId: this.$route.params.id,
+              token: token
+            }
+            this.$store.dispatch('deleteAnswer', item)
           }
-          this.$store.dispatch('deleteAnswer', item)
-        }
-      })
+        })
     }
   }
 }

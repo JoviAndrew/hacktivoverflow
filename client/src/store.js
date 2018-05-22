@@ -1,11 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
-Vue.use(Vuex)
-
+import router from './router'
 import swal from 'sweetalert'
 import axios from 'axios'
-import router from './router'
+
+Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
@@ -21,10 +20,10 @@ export default new Vuex.Store({
       questionData.forEach(question => {
         let date = new Date(question.createdAt)
         question.createdAt = date
-      })    
+      })
       state.questions = questionData
     },
-    renewQuestion (state, questionData){
+    renewQuestion (state, questionData) {
       let date = new Date(questionData.createdAt)
       questionData.createdAt = date
       questionData.answers.forEach(answer => {
@@ -41,129 +40,139 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    getAllQuestions({commit}){
+    getAllQuestions ({ commit }) {
       axios.get('https://hacktiv-overflow-server.jovianandrewhari.cf/home/show-questions')
-      .then(function(response){
-        commit('renewQuestions', response.data.data)
-      })
-      .catch(function(err){
-        console.log(err)
-      })
+        .then(function (response) {
+          commit('renewQuestions', response.data.data)
+        })
+        .catch(function (err) {
+          swal(err.response.data.message, { icon: 'warning' })
+        })
     },
-    getOneQuestion({commit}, id) {
+    getOneQuestion ({ commit }, id) {
       axios.get(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/show-questions/${id}`)
-      .then(function(questionData){
-        commit('renewQuestion', questionData.data.data)
-      })
-      .catch(function(err){
-        swal('Error while gettting question', err, 'warning')
-        console.log(err)
-      })
+        .then(function (questionData) {
+          commit('renewQuestion', questionData.data.data)
+        })
+        .catch(function (err) {
+          swal('Error while gettting question', err, 'warning')
+          swal(err.response.data.message, { icon: 'warning' })
+        })
     },
-    addNewAnswer({dispatch}, item) {
+    addNewAnswer ({ dispatch }, item) {
       axios.post(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/post-answer/${item.id}`, {postText: item.post}, {headers: {token: item.token}})
-      .then(function(response){
-        swal('Success', response.data.message)
-        dispatch('getOneQuestion', item.id)
-      })
-      .catch(function(err){
-        swal('Error while posting answer', err, 'warning')
-      })
+        .then(function (response) {
+          swal('Success', response.data.message)
+          dispatch('getOneQuestion', item.id)
+        })
+        .catch(function (err) {
+          swal('Error while posting answer', err, 'warning')
+        })
     },
-    votePositive({dispatch}, item) {
+    votePositive ({dispatch}, item) {
       axios.put(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/voteup-question/${item.id}`, {}, {headers: {token: item.token}})
-      .then(function(response){
-        dispatch('getOneQuestion', item.id)
-      })
-      .catch(function(err){
-        swal('Error while voting question', err, 'warning')
-      })
+        .then(function (response) {
+          dispatch('getOneQuestion', item.id)
+        })
+        .catch(function (err) {
+          swal('Error while voting question', err, 'warning')
+        })
     },
-    voteNegative({dispatch}, item) {
+    voteNegative ({ dispatch }, item) {
       axios.put(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/votedown-question/${item.id}`, {}, {headers: {token: item.token}})
-      .then(function(response){
-        dispatch('getOneQuestion', item.id)
-      })
-      .catch(function(err){
-        swal('Error while voting question', err, 'warning')
-      })
+        .then(function (response) {
+          dispatch('getOneQuestion', item.id)
+        })
+        .catch(function (err) {
+          swal('Error while voting question', err, 'warning')
+        })
     },
-    votePositiveAnswer({dispatch}, item) {
+    votePositiveAnswer ({ dispatch }, item) {
       axios.put(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/voteup-answer/${item.answerId}`, {}, {headers: {token: item.token}})
-      .then(function(response){
-        dispatch('getOneQuestion', item.questionId)
-      })
-      .catch(function(err){
-        swal('Error while voting answer', err, 'warning')
-      })
+        .then(function (response) {
+          dispatch('getOneQuestion', item.questionId)
+        })
+        .catch(function (err) {
+          swal('Error while voting answer', err, 'warning')
+        })
     },
-    voteNegativeAnswer({dispatch}, item) {
+    voteNegativeAnswer ({ dispatch }, item) {
       axios.put(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/votedown-answer/${item.answerId}`, {}, {headers: {token: item.token}})
-      .then(function(response){
-        dispatch('getOneQuestion', item.questionId)
-      })
-      .catch(function(err){
-        swal('Error while voting answer', err, 'warning')
-      })
+        .then(function (response) {
+          dispatch('getOneQuestion', item.questionId)
+        })
+        .catch(function (err) {
+          swal('Error while voting answer', err, 'warning')
+        })
     },
-    addQuestion({dispatch}, item) {
+    addQuestion ({dispatch}, item) {
       axios.post(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/post-question`,
-      {
-        header: item.header,
-        postText: item.postText,
-        username: item.username
-      },
-      {
-        headers: {token: item.token}
-      })
-      .then(function(response){
-        swal('Success', response.data.message)
-        let id = response.data.response._id
-        router.push(`/question/${id}`)
-        dispatch('getAllQuestions')
-      })
-      .catch(function(err){
-        swal('Error while posting your question', err, 'warning')
-      })
+        {
+          header: item.header,
+          postText: item.postText,
+          username: item.username
+        },
+        {
+          headers: {token: item.token}
+        })
+        .then(function (response) {
+          swal('Success', response.data.message)
+          let id = response.data.response._id
+          router.push(`/question/${id}`)
+          dispatch('getAllQuestions')
+        })
+        .catch(function (err) {
+          swal('Error while posting your question', err, 'warning')
+        })
     },
-    updateOneQuestion({dispatch}, item){
+    updateOneQuestion ({dispatch}, item) {
       axios.put(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/update/${item.questionId}`,
-      {
-        header: item.header,
-        postText: item.postText
-      },
-      {
-        headers: {token: item.token}
-      })
-      .then(function(response){
-        swal('Success', response.data.message)
-        dispatch('getAllQuestions')
-        dispatch('getOneQuestion', item.questionId)
-      })
-      .catch(function(err){
-        swal('Error while updating your question', err, 'warning')
-      })
+        {
+          header: item.header,
+          postText: item.postText
+        },
+        {
+          headers: {token: item.token}
+        })
+        .then(function (response) {
+          swal('Success', response.data.message)
+          dispatch('getAllQuestions')
+          dispatch('getOneQuestion', item.questionId)
+        })
+        .catch(function (err) {
+          swal('Error while updating your question', err, 'warning')
+        })
     },
-    deleteQuestion({dispatch}, item){
-      axios.delete(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/delete-question/${item.questionId}`,{headers: {token: item.token}})
-      .then(function(response){
-        swal('Success', response.data.message)
-        dispatch('getAllQuestions')
-        router.push('/')
-      })
-      .catch(function(err){
-        swal('Error while deleting your question', err, 'warning')
-      })
+    deleteQuestion ({ dispatch }, item) {
+      axios.delete(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/delete-question/${item.questionId}`,
+        {
+          headers: { token: item.token }
+        })
+        .then(function (response) {
+          swal('Success', response.data.message)
+          dispatch('getAllQuestions')
+          router.push('/')
+        })
+        .catch(function (err) {
+          swal('Error while deleting your question', err, 'warning')
+        })
     },
-    deleteAnswer({dispatch}, item){
-      axios.delete(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/delete-answer/${item.answerId}`, {headers: {token: item.token, id: item.questionId}})
-      .then(function(response){
-        swal('Success', response.data.message)
-        dispatch('getOneQuestion', item.questionId)
-      })
-      .catch(function(err){
-        swal(err.response.data.message, "warning")
-      })
+    deleteAnswer ({ dispatch }, item) {
+      axios.delete(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/delete-answer/${item.answerId}`,
+        {
+          headers:
+          {
+            token: item.token,
+            id: item.questionId
+          }
+        })
+        .then(function (response) {
+          swal('Success', response.data.message)
+          dispatch('getOneQuestion', item.questionId)
+        })
+        .catch(function (err) {
+          swal(err.response.data.message, {icon: 'warning'})
+        })
     },
     doLogin ({commit}, loginData) {
       axios.post('https://hacktiv-overflow-server.jovianandrewhari.cf/index/login', {username: loginData.username, password: loginData.password})
@@ -181,7 +190,6 @@ export default new Vuex.Store({
         })
         .catch(function (err) {
           swal(err.response.data.message, {icon: 'warning'})
-          console.log(err)
         })
     },
     registerUser ({commit}, registerData) {
@@ -205,7 +213,6 @@ export default new Vuex.Store({
         })
         .catch(function (err) {
           swal(err.response.data.message, {icon: 'warning'})
-          console.log(err)
         })
     },
     loginFB ({ commit, dispatch }, userProfile) {
@@ -241,5 +248,5 @@ export default new Vuex.Store({
           })
         })
     }
-  },
+  }
 })

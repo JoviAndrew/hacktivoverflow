@@ -56,6 +56,7 @@
 
 <script>
 // @ is an alias to /src
+/* eslint-disable */
 import TableQuestions from '@/components/TableQuestions.vue'
 import { mapState } from 'vuex'
 
