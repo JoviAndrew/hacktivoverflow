@@ -16,14 +16,9 @@
 
 <script>
 import { mapState } from 'vuex'
+import swal from 'sweetalert'
 
 export default {
-  data () {
-    return {
-      showLogin: true,
-      showLogout: false
-    }
-  },
   computed: {
     ...mapState(['isLogin'])
   },
@@ -44,15 +39,25 @@ export default {
       this.$router.push('/login')
     },
     doLogout () {
-      localStorage.removeItem('token')
-      localStorage.removeItem('username')
-      localStorage.removeItem('firstname')
-      localStorage.removeItem('lastname')
-      this.showLogin = true
-      this.showLogout = false
-      this.$router.push('/')
-      this.$store.commit('changeStatusFalse')
-      this.$store.dispatch('getAllQuestions')
+      swal({
+        title: 'Logout',
+        text: 'Are you sure you want to logout?',
+        icon: 'warning',
+        buttons: true,
+        dangerMode: true
+      })
+        .then((logout) => {
+          if (logout) {
+            localStorage.removeItem('token')
+            localStorage.removeItem('username')
+            localStorage.removeItem('firstname')
+            localStorage.removeItem('lastname')
+            this.$router.push('/')
+            this.$store.commit('changeStatusFalse')
+            this.$store.dispatch('getAllQuestions')
+            swal('You have successfully logged out!', { icon: 'success' })
+          }
+        })
     }
   }
 }
