@@ -42,7 +42,7 @@ export default new Vuex.Store({
   },
   actions: {
     getAllQuestions({commit}){
-      axios.get('http://localhost:3000/home/show-questions')
+      axios.get('https://hacktiv-overflow-server.jovianandrewhari.cf/home/show-questions')
       .then(function(response){
         commit('renewQuestions', response.data.data)
       })
@@ -51,7 +51,7 @@ export default new Vuex.Store({
       })
     },
     getOneQuestion({commit}, id) {
-      axios.get(`http://localhost:3000/home/show-questions/${id}`)
+      axios.get(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/show-questions/${id}`)
       .then(function(questionData){
         commit('renewQuestion', questionData.data.data)
       })
@@ -61,7 +61,7 @@ export default new Vuex.Store({
       })
     },
     addNewAnswer({dispatch}, item) {
-      axios.post(`http://localhost:3000/home/post-answer/${item.id}`, {postText: item.post}, {headers: {token: item.token}})
+      axios.post(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/post-answer/${item.id}`, {postText: item.post}, {headers: {token: item.token}})
       .then(function(response){
         swal('Success', response.data.message)
         dispatch('getOneQuestion', item.id)
@@ -71,7 +71,7 @@ export default new Vuex.Store({
       })
     },
     votePositive({dispatch}, item) {
-      axios.put(`http://localhost:3000/home/voteup-question/${item.id}`, {}, {headers: {token: item.token}})
+      axios.put(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/voteup-question/${item.id}`, {}, {headers: {token: item.token}})
       .then(function(response){
         dispatch('getOneQuestion', item.id)
       })
@@ -80,7 +80,7 @@ export default new Vuex.Store({
       })
     },
     voteNegative({dispatch}, item) {
-      axios.put(`http://localhost:3000/home/votedown-question/${item.id}`, {}, {headers: {token: item.token}})
+      axios.put(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/votedown-question/${item.id}`, {}, {headers: {token: item.token}})
       .then(function(response){
         dispatch('getOneQuestion', item.id)
       })
@@ -89,7 +89,7 @@ export default new Vuex.Store({
       })
     },
     votePositiveAnswer({dispatch}, item) {
-      axios.put(`http://localhost:3000/home/voteup-answer/${item.answerId}`, {}, {headers: {token: item.token}})
+      axios.put(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/voteup-answer/${item.answerId}`, {}, {headers: {token: item.token}})
       .then(function(response){
         dispatch('getOneQuestion', item.questionId)
       })
@@ -98,7 +98,7 @@ export default new Vuex.Store({
       })
     },
     voteNegativeAnswer({dispatch}, item) {
-      axios.put(`http://localhost:3000/home/votedown-answer/${item.answerId}`, {}, {headers: {token: item.token}})
+      axios.put(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/votedown-answer/${item.answerId}`, {}, {headers: {token: item.token}})
       .then(function(response){
         dispatch('getOneQuestion', item.questionId)
       })
@@ -107,7 +107,7 @@ export default new Vuex.Store({
       })
     },
     addQuestion({dispatch}, item) {
-      axios.post(`http://localhost:3000/home/post-question`,
+      axios.post(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/post-question`,
       {
         header: item.header,
         postText: item.postText,
@@ -127,7 +127,7 @@ export default new Vuex.Store({
       })
     },
     updateOneQuestion({dispatch}, item){
-      axios.put(`http://localhost:3000/home/update/${item.questionId}`,
+      axios.put(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/update/${item.questionId}`,
       {
         header: item.header,
         postText: item.postText
@@ -145,7 +145,7 @@ export default new Vuex.Store({
       })
     },
     deleteQuestion({dispatch}, item){
-      axios.delete(`http://localhost:3000/home/delete-question/${item.questionId}`,{headers: {token: item.token}})
+      axios.delete(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/delete-question/${item.questionId}`,{headers: {token: item.token}})
       .then(function(response){
         swal('Success', response.data.message)
         dispatch('getAllQuestions')
@@ -156,7 +156,7 @@ export default new Vuex.Store({
       })
     },
     deleteAnswer({dispatch}, item){
-      axios.delete(`http://localhost:3000/home/delete-answer/${item.answerId}`, {headers: {token: item.token, id: item.questionId}})
+      axios.delete(`https://hacktiv-overflow-server.jovianandrewhari.cf/home/delete-answer/${item.answerId}`, {headers: {token: item.token, id: item.questionId}})
       .then(function(response){
         swal('Success', response.data.message)
         dispatch('getOneQuestion', item.questionId)
@@ -166,7 +166,7 @@ export default new Vuex.Store({
       })
     },
     doLogin ({commit}, loginData) {
-      axios.post('http://localhost:3000/index/login', {username: loginData.username, password: loginData.password})
+      axios.post('https://hacktiv-overflow-server.jovianandrewhari.cf/index/login', {username: loginData.username, password: loginData.password})
         .then(function (response) {
           swal({
             title: 'Success',
@@ -185,7 +185,7 @@ export default new Vuex.Store({
         })
     },
     registerUser ({commit}, registerData) {
-      axios.post('http://localhost:3000/index/register',
+      axios.post('https://hacktiv-overflow-server.jovianandrewhari.cf/index/register',
         {
           username: registerData.username,
           password: registerData.password,
@@ -213,7 +213,7 @@ export default new Vuex.Store({
       let firstname = userProfile.first_name
       let lastname = userProfile.last_name
       let fbId = userProfile.id
-      axios.post('http://localhost:3000/index/login-fb', {
+      axios.post('https://hacktiv-overflow-server.jovianandrewhari.cf/index/login-fb', {
         username: username,
         firstname: firstname,
         lastname: lastname,
