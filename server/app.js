@@ -22,8 +22,4 @@ app.use('/index', indexRouter)
 app.use('/home', homeRouter)
 app.use('/notif', notifRouter)
 
-app.listen(process.env.PORT, () => {
-    console.log(`listening on port ${process.env.PORT}`)
-})
-
 module.exports = app
