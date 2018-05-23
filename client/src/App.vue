@@ -2,11 +2,20 @@
   <div id="app">
     <div class="row">
       <div class="col-12">
-        <nav class="navbar justify-content-between navbar-light bg-light">
-          <strong><a class="navbar-brand navbar-nav mr-auto">Hacktiv-Overflow</a></strong>
-            <button class="btn btn-outline-primary" @click="goToHome">Home</button>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <router-link class="navbar-brand" to="home">Hacktiv-Overflow</router-link>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
+                <button class="btn btn-light" @click="goToHome">Home</button>
+              </li>
+            </ul>
             <button v-if="isLogin" class="btn btn-outline-danger my-2 my-sm-0" @click="doLogout">Log out</button>
             <button v-else class="btn btn-outline-success my-2 my-sm-0" @click="gotoLogin">Log in</button>
+          </div>
         </nav>
       </div>
     </div>
