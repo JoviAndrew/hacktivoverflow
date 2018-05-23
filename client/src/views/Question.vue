@@ -13,7 +13,7 @@
           <button class="btn btn-link" @click="deleteQuestion">Delete</button>
         </div>
       </div>
-      <div class="col-xs-12 col-sm-12 col-lg-9">
+      <div class="col-xs-12 col-sm-12 col-lg-9 questionBody">
         <p>{{detailQuestion.post_text}}</p>
         <div>
           <p style="font-size: 12px">Posted by:<strong> {{detailQuestion.user.firstname}} {{detailQuestion.user.lastname}}</strong></p>
@@ -50,13 +50,12 @@
             </div>
           </div>
         </div>
-        <div class="postAnswer col-xs-12 col-lg-9 mt-3">
-        <textarea cols="70" rows="8" v-model="postTextAnswer"></textarea>
-        <button class="btn btn-primary mt-3" @click="addAnswer">Post your answer</button>
+        <div v-if="isLogin" class="postAnswer mt-3">
+          <textarea cols="70" rows="8" v-model="postTextAnswer"></textarea>
+          <button class="btn btn-primary mt-3" @click="addAnswer">Post your answer</button>
         </div>
       </div>
     </div>
-
   <!-- Modal Create -->
   <div class="modal fade" id="questionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -80,7 +79,6 @@
       </div>
     </div>
   </div>
-
   <!-- Modal Edit -->
   <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -148,38 +146,53 @@ export default {
     },
     voteUp () {
       let token = localStorage.getItem('token')
-      let items = {
-        token: token,
-        id: this.$route.params.id
+      if (token === null) {
+        swal('Please login first', {icon: 'warning'})
+      } else {
+        let items = {
+          token: token,
+          id: this.$route.params.id
+        }
+        this.$store.dispatch('votePositive', items)
       }
-      this.$store.dispatch('votePositive', items)
     },
     voteDown () {
       let token = localStorage.getItem('token')
-      let items = {
-        token: token,
-        id: this.$route.params.id
+      if (token === null) {
+        swal('Please login first', {icon: 'warning'})
+      } else {
+        let items = {
+          token: token,
+          id: this.$route.params.id
+        }
+        this.$store.dispatch('voteNegative', items)
       }
-      this.$store.dispatch('voteNegative', items)
     },
     voteUpAnswer (id) {
       let token = localStorage.getItem('token')
-      let items = {
-        token: token,
-        answerId: id,
-        questionId: this.$route.params.id
+      if (token === null) {
+        swal('Please login first', {icon: 'warning'})
+      } else {
+        let items = {
+          token: token,
+          answerId: id,
+          questionId: this.$route.params.id
+        }
+        this.$store.dispatch('votePositiveAnswer', items)
       }
-
-      this.$store.dispatch('votePositiveAnswer', items)
     },
     voteDownAnswer (id) {
       let token = localStorage.getItem('token')
-      let items = {
-        token: token,
-        answerId: id,
-        questionId: this.$route.params.id
+      if (token === null) {
+        swal('Please login first', {icon: 'warning'})
+      } else {
+        let items = {
+          token: token,
+          answerId: id,
+          questionId: this.$route.params.id
+        }
+        this.$store.dispatch('voteNegativeAnswer', items)
       }
-      this.$store.dispatch('voteNegativeAnswer', items)
     },
     setForCreate () {
       this.header = ''
@@ -272,29 +285,32 @@ export default {
 textarea{
   resize: none
 }
-.side{
-  border-left: 1px solid lightblue;
+.side {
   height: 100%;
   padding-top: 5%
 }
-.columnAnswer{
-  padding-top: 10%
+.columnAnswer {
+  border-right: 1px solid lightblue;
 }
 .votes{
   padding-top: 10%;
   font-size: 20px
 }
 .header{
-  margin-top: 3%
+  margin-top: 3%;
+  border-right: 1px solid lightblue
+}
+.questionBody {
+  border-right: 1px solid lightblue
 }
 .buttonAsk{
-  margin-top: 3%;
-  border-left: 1px solid lightblue
+  margin-top: 3%
 }
 .postAnswer {
   display: flex;
   flex-direction: column;
-  margin-left: 12%
+  width: 85%;
+  margin: auto
 }
 .answer{
   margin-top: 3%;
